@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../home/home_page.dart';
+import 'choose_role.dart'; // Add this import at the top of the file
+import 'select_priorites.dart'; // Add this import at the top of the file
 
 class LinkedInDetailsPage extends StatefulWidget {
   const LinkedInDetailsPage({super.key});
@@ -268,7 +269,7 @@ class _LinkedInDetailsPageState extends State<LinkedInDetailsPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            HomePage()), // Navigate to LinkedIn class
+                            WorkSchedulePage()), // Navigate to LinkedIn class
                   );
                 },
                 child: Container(
