@@ -14,7 +14,7 @@ class WelcomeScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             //colors: [Colors.red, Colors.white, Colors.blue],
-           // stops: [0.0, 0.5, 1.0],
+            // stops: [0.0, 0.5, 1.0],
             colors: [Colors.red, Colors.blue],
             stops: [0.0, 1.0],
           ),
@@ -51,7 +51,7 @@ class WelcomeScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const LoginPage(),
+                              builder: (context) => LoginPage(),
                             ),
                           );
                         },
@@ -106,7 +106,6 @@ class WelcomeScreen extends StatelessWidget {
                           onPressed: () {
                             // Handle social media
                           },
-
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             side: const BorderSide(color: Colors.white),
@@ -150,4 +149,4 @@ class WelcomeScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}

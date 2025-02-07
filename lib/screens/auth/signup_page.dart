@@ -60,10 +60,24 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Container(
           width: screenWidth,
           height: screenHeight,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(color: Color(0xFF020611)),
+          //clipBehavior: Clip.antiAlias,
+
+          //decoration: BoxDecoration(color: Color(0xFF020611)),
           child: Stack(
             children: [
+              Positioned(
+                top: MediaQuery.of(context).size.height *
+                    0.1, // Adjust position as needed
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/signup.png', // Path to your image
+                    //width: 2000, // Adjust width as needed
+                    //height: 2000, // Adjust height as needed
+                    fit: BoxFit.contain, // Ensure the image fits well
+                  ),
+                ),
+              ),
+              /*
               Positioned(
                 left: -screenWidth * 0.5,
                 top: -screenHeight * 0.2,
@@ -79,6 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
+*/
               Positioned(
                 left: 0,
                 top: screenHeight * 0.25,

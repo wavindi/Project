@@ -27,8 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.red,
               Colors.blue,
+              Colors.red,
             ],
             stops: [0.0, 1.0],
           ),
@@ -43,9 +43,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 200,
               ),
               const SizedBox(height: 24),
-             
-             
-             /*
+
+              /*
               const Text(
                 'LUXPOOL',
                 style: TextStyle(
@@ -60,4 +59,4 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-} 
+}

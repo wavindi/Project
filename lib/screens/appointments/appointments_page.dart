@@ -48,13 +48,6 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Plan Your Trip'),
-        actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.add), onPressed: () {}),
-        ],
-      ),
       body: RefreshIndicator(
         onRefresh: () async => _loadInitialData(),
         child: ListView.builder(
@@ -74,34 +67,6 @@ class _AppointmentsPageState extends State<AppointmentsPage> {
           },
         ),
       ),
-      bottomNavigationBar: _buildBottomNavBar(),
-    );
-  }
-
-  Widget _buildBottomNavBar() {
-    return BottomNavigationBar(
-      currentIndex: 1,
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: const Color(0xFF4BBDD8),
-      unselectedItemColor: const Color(0xFF98A1B2),
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.directions_car),
-          label: 'Go',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_today),
-          label: 'Plan',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.chat_bubble),
-          label: 'Chat',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
     );
   }
 }

@@ -1,210 +1,210 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../home/home_page.dart';
-import 'signup_page.dart';
+import '../home/home_page.dart'; // Import your HomePage
+import 'signup_page.dart'; // Import your SignupPage
 
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+class LoginPage extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLoading = false;
-
-  Future<void> _handleLogin() async {
-    // Check if fields are empty
-    if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields above')),
-      );
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // Sign in with email and password
-      await _auth.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      String errorMessage;
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No user found with this email.';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Password is wrong.';  // Updated error message
-      } else {
-        errorMessage = e.message ?? 'An error occurred.';
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _handleSignup() async {
-    try {
-      // Create a new account with email and password
-      await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully!')),
-      );
-    } on FirebaseAuthException catch (e) {
-      String errorMessage;
-      if (e.code == 'email-already-in-use') {
-        errorMessage = 'This email is already in use.';
-      } else if (e.code == 'weak-password') {
-        errorMessage = 'The password is too weak.';
-      } else {
-        errorMessage = e.message ?? 'An error occurred.';
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.red, Colors.blue],
-            stops: [0.0, 1.0],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 40),
-                // App Logo
-                Image.asset(
-                  'assets/images/logo1.png',
-                  width: 150,
-                  height: 150,
-                ),
-                const SizedBox(height: 40),
-                // Email Input Field
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(Icons.email),
+        width: MediaQuery.of(context).size.width, // Adjust to screen width
+        height: MediaQuery.of(context).size.height, // Adjust to screen height
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(color: Colors.white),
+        child: Stack(
+          children: [
+            // Background Circles
+            Positioned(
+              left: -24,
+              top: -93,
+              child: Opacity(
+                opacity: 0.20,
+                child: Container(
+                  width: 425,
+                  height: 246,
+                  child: Stack(
+                    children: [
+                      // Add your background circles here...
+                    ],
                   ),
-                  keyboardType: TextInputType.emailAddress,
                 ),
-                const SizedBox(height: 16),
-                // Password Input Field
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(Icons.lock),
-                  ),
-                  obscureText: true,
+              ),
+            ),
+
+            // Add the login.png image
+            Positioned(
+              left: 0,
+              right: 0,
+              top: MediaQuery.of(context).size.height *
+                  0.1, // Adjust position as needed
+              child: Center(
+                child: Image.asset(
+                  'assets/images/login.png', // Path to your image
+                  //width: 200, // Adjust width as needed
+                  //height: 200, // Adjust height as needed
+                  fit: BoxFit.contain, // Ensure the image fits well
                 ),
-                const SizedBox(height: 24),
-                // Login Button
-                _isLoading
-                    ? const CircularProgressIndicator()
-                    : SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _handleLogin,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+
+            // Login Section
+            Positioned(
+              left: 0,
+              right: 0, // Stretch to full width
+              bottom: 0, // Position at the bottom
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                decoration: BoxDecoration(color: Colors.white),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Log in with LinkedIn or choose another method',
+                      style: TextStyle(
+                        color: Color(0xFF667084),
+                        fontSize: 12,
+                        fontFamily: 'Public Sans',
+                        fontWeight: FontWeight.w500,
+                        height: 1.50,
                       ),
                     ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // Signup Button
-                TextButton(
-                  onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignUpPage(),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        // Handle LinkedIn login
+                      },
+                      child: Container(
+                        width: double.infinity, // Full width
+                        height: 54,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: ShapeDecoration(
+                          color: Color(0xFFF2F3F6),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 30,
+                              height: 30,
+                              child: FlutterLogo(),
                             ),
-                          );
-                        },
-                  child: const Text(
-                    'Create a new account',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // LUXPOOL Direct Access Button
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                    );
-                  },
-                  child: const Text(
-                    'LUXPOOL',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                            const SizedBox(width: 12),
+                            Text(
+                              'Continue with LinkedIn',
+                              style: TextStyle(
+                                color: Color(0xFF667084),
+                                fontSize: 14,
+                                fontFamily: 'Public Sans',
+                                fontWeight: FontWeight.w500,
+                                height: 1.43,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'OR',
+                      style: TextStyle(
+                        color: Color(0xFF98A1B2),
+                        fontSize: 12,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1.50,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              // Navigate to HomePage
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                            },
+                            child: Container(
+                              height: 48,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF2F3F6),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    color: Color(0xFF667084),
+                                    fontSize: 14,
+                                    fontFamily: 'Public Sans',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              // Navigate to SignupPage
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignUpPage()),
+                              );
+                            },
+                            child: Container(
+                              height: 48,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF2F3F6),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    color: Color(0xFF667084),
+                                    fontSize: 14,
+                                    fontFamily: 'Public Sans',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 }
-
-

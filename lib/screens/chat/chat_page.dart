@@ -1,254 +1,188 @@
 import 'package:flutter/material.dart';
-import '../../models/contact.dart';
+import 'package:luxpool/models/contact.dart';
 
-class ChatMessage {
-  final String text;
-  final bool isSentByMe;
-  final DateTime timestamp;
-
-  ChatMessage({
-    required this.text,
-    required this.isSentByMe,
-    required this.timestamp,
-  });
-}
-
-class ChatPage extends StatefulWidget {
-  final Contact contact;
-  
-  const ChatPage({
-    super.key,
-    required this.contact,
-  });
-
-  @override
-  State<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
-  final List<ChatMessage> _messages = [];
-  final TextEditingController _textController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _handleSubmitted(String text) {
-    _textController.clear();
-    setState(() {
-      _messages.add(
-        ChatMessage(
-          text: text,
-          isSentByMe: true,
-          timestamp: DateTime.now(),
-        ),
-      );
-    });
-    _scrollController.animateTo(
-      0.0,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
-  }
+class ChatPage extends StatelessWidget {
+  const ChatPage({super.key, required Contact contact});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        titleSpacing: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.grey[300],
-              child: widget.contact.photoUrl != null
-                  ? null
-                  : Text(
-                      widget.contact.name[0],
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.contact.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (widget.contact.isOnline)
-                    const Text(
-                      'Online',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white70,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ],
+        title: const Text(
+          'Chats',
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w800,
+            color: Colors.black,
+          ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.videocam),
+            icon: const Icon(Icons.search, color: Colors.black),
             onPressed: () {
-              // Implement video call
+              // Add search functionality
             },
           ),
           IconButton(
-            icon: const Icon(Icons.call),
+            icon: const Icon(Icons.more_vert, color: Colors.black),
             onPressed: () {
-              // Implement voice call
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {
-              // Implement more options
+              // Add more options
             },
           ),
         ],
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Column(
         children: [
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-              ),
-              child: ListView.builder(
-                controller: _scrollController,
-                reverse: true,
-                padding: const EdgeInsets.all(8.0),
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  final message = _messages[index];
-                  return _buildMessage(message);
-                },
-              ),
+            child: ListView.builder(
+              itemCount: 10, // Replace with actual chat list length
+              itemBuilder: (context, index) {
+                return ChatListItem(
+                  userName: 'User $index',
+                  lastMessage: 'This is the last message...',
+                  time: '5:42 pm',
+                  isOnline: index % 2 == 0, // Example logic for online status
+                );
+              },
             ),
           ),
-          const Divider(height: 1.0),
-          _buildTextComposer(),
+          const ChatInputField(),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFF4BBDD8),
+        unselectedItemColor: const Color(0xFF98A1B2),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.directions),
+            label: 'Go',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Plan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildMessage(ChatMessage message) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment:
-            message.isSentByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+class ChatListItem extends StatelessWidget {
+  final String userName;
+  final String lastMessage;
+  final String time;
+  final bool isOnline;
+
+  const ChatListItem({
+    super.key,
+    required this.userName,
+    required this.lastMessage,
+    required this.time,
+    this.isOnline = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Stack(
         children: [
-          Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.75,
-            ),
-            decoration: BoxDecoration(
-              color: message.isSentByMe
-                  ? Colors.lightBlue[100]
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 2,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
-              vertical: 8.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  message.text,
-                  style: const TextStyle(
-                    color: Colors.black87,
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${message.timestamp.hour}:${message.timestamp.minute.toString().padLeft(2, '0')}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.black54,
-                  ),
-                ),
-              ],
-            ),
+          const CircleAvatar(
+            radius: 24,
+            backgroundImage: NetworkImage('https://via.placeholder.com/48x48'),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextComposer() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, -1),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.attach_file),
-              onPressed: () {
-                // Implement file attachment
-              },
-            ),
-            Expanded(
-              child: TextField(
-                controller: _textController,
-                onSubmitted: _handleSubmitted,
-                decoration: const InputDecoration(
-                  hintText: 'Type a message',
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(16.0),
+          if (isOnline)
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.white, width: 2),
                 ),
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.send),
-              onPressed: () {
-                if (_textController.text.isNotEmpty) {
-                  _handleSubmitted(_textController.text);
-                }
-              },
-            ),
-          ],
+        ],
+      ),
+      title: Text(
+        userName,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
         ),
       ),
+      subtitle: Text(
+        lastMessage,
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.grey,
+        ),
+      ),
+      trailing: Text(
+        time,
+        style: const TextStyle(
+          fontSize: 12,
+          color: Colors.grey,
+        ),
+      ),
+      onTap: () {
+        // Navigate to chat details
+      },
     );
   }
-} 
+}
+
+class ChatInputField extends StatelessWidget {
+  const ChatInputField({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey.shade300)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Type a message...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                fillColor: Colors.grey.shade200,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.send, color: Color(0xFF4BBDD8)),
+            onPressed: () {
+              // Add send message functionality
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
