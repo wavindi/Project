@@ -120,7 +120,9 @@ flutter:
     - assets/images/logonamewhite.png
     - assets/images/luxpoolblack.jpg
     - assets/images/luxpoolwhite.jpg
-
+    - assets/images/background.jpg
+    - assets/images/roledriver.png
+    - assets/images/rolepassenger.png
 
 flutter_icons:
   android: true
